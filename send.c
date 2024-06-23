@@ -20,11 +20,11 @@ char buf[MAX_SIZE+1];
 void send_mail(const char* receiver, const char* subject, const char* msg, const char* att_path)
 {
     const char* end_msg = "\r\n.\r\n";
-    const char* host_name = ""; // TODO: Specify the mail server domain name
+    const char* host_name = "smtp.163.com"; // TODO: Specify the mail server domain name
     const unsigned short port = 25; // SMTP server port
-    const char* user = ""; // TODO: Specify the user
-    const char* pass = ""; // TODO: Specify the password
-    const char* from = ""; // TODO: Specify the mail address of the sender
+    const char* user = "ethanchen20@163.com"; // TODO: Specify the user
+    const char* pass = "ILEPABCWSTGUFLHJ"; // TODO: Specify the password
+    const char* from = "ethanchen20@163.com"; // TODO: Specify the mail address of the sender
     char dest_ip[16]; // Mail server IP address
     int s_fd; // socket file descriptor
     struct hostent *host;
@@ -45,6 +45,35 @@ void send_mail(const char* receiver, const char* subject, const char* msg, const
     strcpy(dest_ip, inet_ntoa(*addr_list[i-1]));
 
     // TODO: Create a socket, return the file descriptor to s_fd, and establish a TCP connection to the mail server
+    // Create a socket
+    if ((s_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+    {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    // Define the server address
+    struct sockaddr_in server_addr;
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(port);
+
+    // Convert IPv4 and IPv6 addresses from text to binary form
+    if (inet_pton(AF_INET, dest_ip, &server_addr.sin_addr) <= 0)
+    {
+        perror("inet_pton");
+        close(s_fd);
+        exit(EXIT_FAILURE);
+    }
+
+    // Connect to the server
+    if (connect(s_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1)
+    {
+        perror("connect");
+        close(s_fd);
+        exit(EXIT_FAILURE);
+    }
+
 
     // Print welcome message
     if ((r_size = recv(s_fd, buf, MAX_SIZE, 0)) == -1)
