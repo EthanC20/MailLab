@@ -23,7 +23,7 @@ void send_mail(const char* receiver, const char* subject, const char* msg, const
     const char* host_name = "smtp.163.com"; // TODO: Specify the mail server domain name
     const unsigned short port = 25; // SMTP server port
     const char* user = "ethanchen20@163.com"; // TODO: Specify the user
-    const char* pass = "ILEPABCWSTGUFLHJ"; // TODO: Specify the password
+    const char* pass = ""; // TODO: Specify the password
     const char* from = "ethanchen20@163.com"; // TODO: Specify the mail address of the sender
     char dest_ip[16]; // Mail server IP address
     int s_fd; // socket file descriptor
@@ -85,7 +85,7 @@ void send_mail(const char* receiver, const char* subject, const char* msg, const
     printf("%s", buf);
 
     // Send EHLO command and print server response
-    const char* EHLO = ""; // TODO: Enter EHLO command here
+    const char* EHLO = "EHLO 163.com\r\n"; // TODO: Enter EHLO command here
     send(s_fd, EHLO, strlen(EHLO), 0);
     // TODO: Print server response to EHLO command
     
